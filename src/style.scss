@@ -1,0 +1,383 @@
+@import "@89netram/snygg/src/index";
+
+$maxWidth: 40rem;
+$duration: 0.5;
+
+:root {
+	--included-color: #daab55;
+	--correct-color: #86da55;
+}
+
+html {
+	height: 100vh;
+	height: -webkit-fill-available;
+	height: fill-available;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+body {
+	height: 100%;
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.line {
+	display: flex;
+	flex-direction: row;
+	gap: 1ch;
+	margin-bottom: 1ch;
+	perspective: 800px;
+	perspective-origin: center center;
+
+	.letter-tile {
+		width: 2em;
+		height: 2em;
+		border-radius: 0.25em;
+		border: 1px solid var(--border);
+		text-align: center;
+		line-height: 2em;
+		font-weight: bold;
+		transform-style: preserve-3d;
+
+		@mixin letter-tile-animation {
+			@for $i from 0 to 5 {
+				&:nth-child(#{$i + 1}) {
+					animation: tile-animation-out #{$duration / 2}s ease-in #{$i * $duration}s 1 normal backwards,
+						tile-animation-in #{$duration / 2}s ease-out #{$i * $duration + $duration / 2}s 1 normal;
+				}
+			}
+		}
+
+		&.not-included {
+			background-color: var(--level1-color);
+			filter: brightness(0.5);
+			@include letter-tile-animation;
+		}
+
+		&.included {
+			background-color: var(--included-color);
+			@include letter-tile-animation;
+		}
+
+		&.correct {
+			background-color: var(--correct-color);
+			@include letter-tile-animation;
+		}
+
+		@keyframes tile-animation-out {
+			0% {
+				transform: rotateX(0deg);
+				filter: none;
+				background: none;
+			}
+
+			100% {
+				transform: rotateX(-90deg);
+				filter: none;
+				background: none;
+			}
+		}
+
+		@keyframes tile-animation-in {
+			0% {
+				transform: rotateX(90deg);
+				filter: none;
+				background: none;
+			}
+
+			100% {
+				transform: rotateX(0deg);
+			}
+		}
+	}
+}
+
+app {
+	height: 100%;
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	align-items: stretch;
+
+	header,
+	main {
+		width: 100vw;
+		margin: 0px;
+	}
+
+	header {
+		position: relative;
+		padding: 0px 1rem;
+
+		@media (min-width: $maxWidth) {
+			padding: 0px calc((100% - $maxWidth) / 2 + 1rem);
+		}
+
+		h1,
+		h2 {
+			padding: 0px;
+			margin: 0px;
+			position: absolute;
+			left: 50%;
+			transform: translate(-50%, 0px);
+
+			&::after {
+				content: none;
+			}
+		}
+
+		div {
+			flex-grow: 1;
+		}
+
+		button {
+			padding: 0.5rem 0.75rem;
+			border: none;
+			font-size: 1.25rem;
+		}
+	}
+
+	.notification {
+		position: absolute;
+		top: calc($headerSize + 2rem);
+		left: 50%;
+		transform: translate(-50%, 0px);
+		padding: 0.75rem 1rem;
+		border-radius: 0.25rem;
+		background-color: var(--level1-color);
+		font-size: 1.25rem;
+		text-align: center;
+		z-index: 1;
+		opacity: 0;
+	}
+
+	main {
+		flex-grow: 1;
+		padding: 1rem var(--padding) var(--padding) var(--padding);
+
+		@media (min-width: $maxWidth) {
+			padding: 1rem calc((100% - $maxWidth) / 2 + 1rem) var(--padding) calc((100% - $maxWidth) / 2 + 1rem);
+		}
+
+		&.Hjälp {
+			--padding: 0.5rem;
+		}
+
+		&.Spel {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			--padding: 0.25rem;
+
+			.attempts {
+				flex-grow: 1;
+				font-size: 1.25rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				@media (min-width: $maxWidth) {
+					font-size: 1.5rem;
+					margin-top: calc(-1rem - $headerSize);
+				}
+			}
+
+			.keyboard {
+				display: grid;
+				width: 100%;
+				grid-template-columns: repeat(11, 1fr);
+				grid-template-rows: repeat(3, 1fr);
+				gap: 0.25rem;
+
+				@media (min-width: $maxWidth) {
+					gap: 0.5rem;
+				}
+
+				button {
+					display: inline-block;
+					height: 3.5rem;
+					padding: 0.5rem;
+					text-align: center;
+					font-size: 1rem;
+					font-weight: bold;
+					cursor: pointer;
+					animation: key-initial-color-animation #{$duration * 5}s linear;
+
+					&.wide {
+						grid-column-start: 1;
+						grid-column-end: 3;
+
+						&~.wide {
+							grid-column-start: 10;
+							grid-column-end: 12;
+						}
+					}
+
+					&.not-included {
+						filter: brightness(0.5);
+						animation: key-not-include-animation #{$duration * 5}s linear;
+
+						&:hover {
+							filter: brightness(0.4);
+						}
+
+						@keyframes key-not-include-animation {
+							0% {
+								filter: none;
+							}
+
+							100% {
+								filter: none;
+							}
+						}
+					}
+
+					&.included {
+						background-color: var(--included-color);
+						transition: background-color 0s linear #{$duration * 5}s;
+					}
+
+					&.correct {
+						background-color: var(--correct-color);
+						transition: background-color 0s linear #{$duration * 5}s;
+					}
+
+					@keyframes key-initial-color-animation {
+						0% {
+							background-color: var(--level1-color);
+						}
+
+						100% {
+							background-color: var(--level1-color);
+						}
+					}
+				}
+			}
+		}
+
+		&.Statistik {
+			--padding: 0.5rem;
+
+			.stats {
+				display: flex;
+				flex-direction: row;
+				align-items: flex-start;
+				justify-content: center;
+				gap: 1rem;
+				margin-top: 1rem;
+				margin-bottom: 2rem;
+				text-align: center;
+
+				div {
+					width: 4rem;
+
+					p {
+						margin: 0px;
+
+						&:first-child {
+							font-size: 2rem;
+						}
+
+						&:last-child {
+							font-size: 0.75rem;
+						}
+					}
+				}
+			}
+
+			.guesses {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				justify-content: center;
+				gap: 0.25rem;
+				margin-top: 1rem;
+				margin-bottom: 3rem;
+
+				p {
+					margin: 0px;
+					font-weight: bold;
+					font-variant-numeric: tabular-nums;
+
+					span {
+						display: inline-block;
+						text-align: end;
+						font-weight: normal;
+						padding: 0px 0.5ch;
+						width: calc(max(1% * var(--percentage) - 4ch, 0px) + 2ch);
+						background-color: #55a9da;
+					}
+				}
+			}
+
+			.split {
+				background-color: var(--color);
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 1px;
+
+				>* {
+					padding: 1rem;
+					background-color: var(--background-color);
+				}
+
+				.left {
+					padding-right: 0px;
+
+					p {
+						margin: 0px;
+						text-align: center;
+
+						&:first-child {
+							font-size: 0.75rem;
+						}
+
+						&:last-child {
+							font-size: 2rem;
+							font-variant-numeric: tabular-nums;
+						}
+					}
+				}
+
+				.right {
+					padding-left: 0px;
+
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: center;
+
+					button {
+						font-size: 1.5rem;
+						font-weight: normal;
+					}
+				}
+			}
+		}
+
+		&.Inställningar {
+			--padding: 0.5rem;
+			position: relative;
+
+			label {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+			}
+
+			.bottom {
+				text-align: center;
+				position: absolute;
+				left: 0px;
+				right: 0px;
+				bottom: 0px;
+			}
+		}
+	}
+}

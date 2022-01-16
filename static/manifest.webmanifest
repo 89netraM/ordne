@@ -1,0 +1,39 @@
+{
+	"background_color": "#1b1b1b",
+	"categories": [
+		"game",
+		"puzzle"
+	],
+	"description": "Ordspel på svenska",
+	"dir": "ltr",
+	"display": "standalone",
+	"icons": [
+		{
+			"sizes": "256x256",
+			"src": "fav-256.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "128x128",
+			"src": "fav-128.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "64x64",
+			"src": "fav-64.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "32x32",
+			"src": "fav-32.png",
+			"type": "image/png"
+		}
+	],
+	"lang": "sv",
+	"name": "Ordne",
+	"orientation": "portrait-primary",
+	"scope": "https://åsberg.net/ordne/",
+	"short_name": "Ordne",
+	"start_url": "https://åsberg.net/ordne/",
+	"theme_color": "#86da55"
+}
