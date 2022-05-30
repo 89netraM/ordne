@@ -29,7 +29,7 @@ module.exports = {
 		new HtmlPlugin({
 			template: path.resolve(__dirname, "index.html"),
 			title: "Ordne",
-			base: "./"
+			base: "/ordne/"
 		}),
 		new WorkboxPlugin.GenerateSW({
 			clientsClaim: true,
