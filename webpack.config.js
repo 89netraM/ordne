@@ -29,7 +29,7 @@ module.exports = {
 		new HtmlPlugin({
 			template: path.resolve(__dirname, "index.html"),
 			title: "Ordne",
-			base: "/ordne/"
+			base: process.env["BASE_URL"] ?? "/ordne/",
 		}),
 		new WorkboxPlugin.GenerateSW({
 			clientsClaim: true,
