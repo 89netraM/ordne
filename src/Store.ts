@@ -1,5 +1,6 @@
 import { XORShift } from "random-seedable";
 import { Words } from "./Words";
+import { SpecialWords } from "./SpecialWords";
 
 const currentsDateKey = "currentsDate";
 const currentWordsKey = "currentWords";
@@ -17,9 +18,12 @@ export class Store {
 	}
 
 	public static get currentWord(): string {
+		if (SpecialWords.has(Store.currentDate)) {
+			return SpecialWords.get(Store.currentDate);
+		}
+
 		const today = new Date(Store.currentDate);
 		const random = new XORShift(today.getTime());
-
 		return Words[random.randBelow(Words.length)];
 	}
 
